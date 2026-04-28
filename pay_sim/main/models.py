@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+
+class Payment(models.Model):
+    id = models.UUIDField(primary_key=True)
+    status = models.CharField(max_length=20)
