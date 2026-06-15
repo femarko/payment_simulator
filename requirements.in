@@ -2,3 +2,5 @@
 django
 djangorestframework
 
+# WSGI server
+gunicorn

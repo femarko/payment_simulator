@@ -12,5 +12,9 @@ django==6.0.4
     #   djangorestframework
 djangorestframework==3.17.1
     # via -r requirements.in
+gunicorn==26.0.0
+    # via -r requirements.in
+packaging==26.2
+    # via gunicorn
 sqlparse==0.5.5
     # via django
