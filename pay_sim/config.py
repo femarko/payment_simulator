@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from functools import lru_cache
 from pydantic import (
@@ -9,11 +10,14 @@ from pydantic_settings import (
     NoDecode,
     SettingsConfigDict,
 )
-from typing import Annotated
+from typing import (
+    Annotated,
+    Optional,
+)
 
 
-
-ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
+BASE_DIR = Path(__file__).resolve().parents[1]
+ENV_FILE = BASE_DIR / ".env.prod" if os.getenv("MODE") == "prod" else BASE_DIR / ".env.local"
 
 
 def parse_comma_separated_hosts(value: str | list[str]) -> list[str]:
@@ -25,20 +29,34 @@ def parse_comma_separated_hosts(value: str | list[str]) -> list[str]:
         return [host.strip() for host in value.split(",") if host.strip()]
     return value
 
+def parse_secure_proxy_ssl_header(value: str) -> tuple[str, ...]:
+    return tuple(value.split(","))
+
 
 class Settings(BaseSettings):
-    db_host: str
-    db_port: str
-    db_name: str
-    db_user: str
-    db_password: str
+    debug: bool
     secret_key: str
+    session_cookie_secure: Optional[bool] = None
+    csrf_cookie_secure: Optional[bool] = None
+    db_host: Optional[str] = None
+    db_port: Optional[str] = None
+    db_name: Optional[str] = None
+    db_user: Optional[str] = None
+    db_password: Optional[str] = None
+    secure_proxy_ssl_header: Optional[
+        Annotated[
+            tuple[str, ...],
+            NoDecode,
+            BeforeValidator(parse_secure_proxy_ssl_header),
+        ]
+    ] = None
+    base_dir: Path = BASE_DIR
     allowed_hosts: Annotated[
         list[str],
         NoDecode,
         BeforeValidator(parse_comma_separated_hosts), 
     ] = Field(default_factory=list)
-    base_dir: Path = Field(default=Path(__file__).resolve().parent) 
+
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,
