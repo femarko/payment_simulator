@@ -4,3 +4,6 @@ djangorestframework
 
 # WSGI server
 gunicorn
+
+# config
+pydantic-settings
