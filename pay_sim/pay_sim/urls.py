@@ -15,16 +15,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import (
+    path,
+    register_converter,
+)
 
+from main.converters import UUIDConverter
 from main.views import (
     index,
     check_status,
 )
 
 
+register_converter(UUIDConverter, 'uuidconverter')
+
 urlpatterns = [
     path('', index, name='index'),
     path('admin/', admin.site.urls),
-    path('api/v1/payments/<str:payment_id>/status/', check_status, name='check_status'),
+    path('api/v1/payments/<uuidconverter:payment_id>/status/', check_status, name='check_status'),
 ]
