@@ -7,3 +7,6 @@ gunicorn
 
 # config
 pydantic-settings
+
+# db
+psycopg[binary]

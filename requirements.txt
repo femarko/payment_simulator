@@ -18,6 +18,10 @@ gunicorn==26.0.0
     # via -r requirements.in
 packaging==26.2
     # via gunicorn
+psycopg[binary]==3.3.4
+    # via -r requirements.in
+psycopg-binary==3.3.4
+    # via psycopg
 pydantic==2.13.4
     # via pydantic-settings
 pydantic-core==2.46.4
