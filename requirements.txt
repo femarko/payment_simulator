@@ -41,3 +41,5 @@ typing-inspection==0.4.2
     # via
     #   pydantic
     #   pydantic-settings
+whitenoise==6.12.0
+    # via -r requirements.in

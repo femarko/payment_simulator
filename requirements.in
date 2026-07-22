@@ -2,8 +2,9 @@
 django
 djangorestframework
 
-# WSGI server
+# WSGI server and statics
 gunicorn
+whitenoise
 
 # config
 pydantic-settings
