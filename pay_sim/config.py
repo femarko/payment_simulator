@@ -14,10 +14,25 @@ from typing import (
     Annotated,
     Optional,
 )
+from enum import StrEnum
 
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-ENV_FILE = BASE_DIR / ".env.prod" if os.getenv("MODE") == "prod" else BASE_DIR / ".env.local"
+
+
+class Mode(StrEnum):
+    LOC_RENDER_DB = "loc_render_db"
+    PROD = "prod"
+
+
+def get_env_file(mode: Mode) -> Path:
+    match mode:
+        case Mode.LOC_RENDER_DB:
+            return BASE_DIR / ".env.local_render_db"
+        case Mode.PROD:
+            return BASE_DIR / ".env.prod"
+        case _:
+            return BASE_DIR / ".env.local"
 
 
 def parse_comma_separated_hosts(value: str | list[str]) -> list[str]:
@@ -59,7 +74,7 @@ class Settings(BaseSettings):
 
 
     model_config = SettingsConfigDict(
-        env_file=ENV_FILE,
+        env_file=get_env_file(os.getenv("MODE")),
         env_file_encoding="utf-8",
         extra="ignore",
     )
